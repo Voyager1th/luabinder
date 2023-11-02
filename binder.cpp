@@ -142,9 +142,9 @@ int main()
     REG_LUA_METHOD_TABLE( cobject , L );
     
 
-    LUA_SET_OBJECT( "dog" , cobject , (cobject *)&dog );
+    LUA_SET_OBJECT(L, "dog" , cobject , (cobject *)&dog );
 
-    LUA_SET_OBJECT( "dog2" , cobject , (cobject *)&dog2 );
+    LUA_SET_OBJECT(L, "dog2" , cobject , (cobject *)&dog2 );
 
     luaL_dostring( L , "print(\"dog name:\" .. dog:GetName( ) .. \"\\ndog age:\" .. dog:GetAttribute( 1 ) ..\"\\n\" ) dog2:SetAttribute(\"Angle\",3) print(\"dog2 name:\" .. dog2:GetName( ) .. \"\\ndog2 age:\" .. dog2:GetAttribute( 1 ) ..\"\\n\" )" );
 
