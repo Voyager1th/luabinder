@@ -52,7 +52,7 @@ static int Lua_SetAttrabute(LuaState* L)
 {
     //因为宏会被转成 DEF_LUA_REFLECTION_FUN(classname,type,ltype,fun,Trait<const char*>(L,2),Trait<int>(L,3))
     classname** ppThis = (classname**)lua_topointer(L,1);
-    if(ppThis != nullptr && *ppThis != nullptr(
+    if(ppThis != nullptr && *ppThis != nullptr)
     {
         if(LUA_TBOOLEAN>=0)
         {
