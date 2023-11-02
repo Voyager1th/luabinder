@@ -58,7 +58,10 @@ static int Lua_SetAttrabute(LuaState* L)
         {
             // 如果函数定义为 void SetAttrabute(const char*,int); //void 返回值不能作为参数 所以导致编译错误，但无关紧要,你可以返回bool值。
             // 可恨 多行宏内部不能使用 条件编译 如果可以有 __if __else __end 该多方便的呢。。。
-            return Feedback<bool>((*ppThis)->SetAttrabute(Trait<const char*>(L,2),Trait<int>(L,3)));//Trait 会通过读取lua栈中的数据无关类型
+            return Feedback<bool>(  L,
+                                    LUA_TBOOLEAN,
+                                    (*ppThis)->SetAttrabute ( Trait<const char*>(L,2), Trait<int>(L,3) ) //Trait 会通过读取lua栈中的数据无关类型
+                                  );
         }else
         {
             (*ppThis)->SetAttrabute(Trait<const char*>(L,2),Trait<int>(L,3));
