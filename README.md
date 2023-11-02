@@ -32,3 +32,38 @@ int main()
 }
 ```
 
+在定义基类的时候 c++ 纯虚函数都在 object.def 中定义
+以下面方法为例:
+```c++
+DEF_REFLECTION_FUN( bool, LUA_TBOOLEAN, SetAttribute, __ARG_INDEX__(const char * ,2), __ARG_INDEX__(int ,3) )
+```
+方法名字 SetAttribute 返回值是 bool ,LUA_TBOOLEAN 是 lua 相对应的数据类型 这样方便我们 传输返回值时自动处理
+第一个参数是 __ARG_INDEX__(const char * ,2) 索引从2 开始 就是从lua栈中获取传入的参数 第二个参数是3 以此类推
+
+DEF_REFLECTION_FUN 这个宏会有 3 种形态 不同位置展开的结果不一样
+
+在定义基类成员时是 
+```c++
+virtual bool SetAttrabute(const char*,int)=0;
+```
+在定义lua函数时是
+```c++
+static int Lua_SetAttrabute(LuaState* L)
+{
+    //因为宏会被转成 DEF_LUA_REFLECTION_FUN(classname,type,ltype,fun,Trait<const char*>(L,2),Trait<int>(L,3))
+    classname** ppThis = (classname**)lua_topointer(L,1);
+    if(ppThis != nullptr && *ppThis != nullptr(
+    {
+        if(LUA_TBOOLEAN>=0)
+        {
+            // 如果函数定义为 void SetAttrabute(const char*,int); //void 返回值不能作为参数 所以导致编译错误，但无关紧要,你可以返回bool值。
+            // 可恨 多行宏内部不能使用 条件编译 如果可以有 __if __else __end 该多方便的呢。。。
+            return Feedback<bool>((*ppThis)->SetAttrabute(Trait<const char*>(L,2),Trait<int>(L,3)));//Trait 会通过读取lua栈中的数据无关类型
+        }else
+        {
+            (*ppThis)->SetAttrabute(Trait<const char*>(L,2),Trait<int>(L,3));
+        }
+    }
+    return 0;
+}
+```
