@@ -14,7 +14,7 @@ int Feedback( lua_State * L , int type , T value )
     return lua_push( L , type , *( (__int64 *)&value ));
 }
 
-//ÕâÀïÓÃÓÚÇø·Ö double ºÍ __int64
+//è¿™é‡Œç”¨äºåŒºåˆ† double å’Œ __int64
 #define LUA_TFLOAT          (LUA_TNUMBER)
 #define LUA_TINT64          (LUA_TNUMBER|0x10)
 
@@ -43,38 +43,38 @@ int Feedback( lua_State * L , int type , T value )
         return 0;\
     }\
 
-//ÔÚ½Ó¿ÚÀàÖĞ¶¨Òå
+//åœ¨æ¥å£ç±»ä¸­å®šä¹‰
 #define DECL_LUA_METHOD_TABLE public:\
 static luaL_Reg __Lua_Members[];
 
-//ÔÚ½Ó¿ÚÀàÍâ³õÊ¼»¯
+//åœ¨æ¥å£ç±»å¤–åˆå§‹åŒ–
 #define DECL_LUA_METHOD_TABLE_BEGIN(cls)                luaL_Reg cls##::##__Lua_Members[]={
 // #include <xxx.def>
 #define DECL_LUA_METHOD_TABLE_END                       {nullptr,nullptr}};
 
-//ÔÚlua³õÊ¼»¯ÖĞµ÷ÓÃ
+//åœ¨luaåˆå§‹åŒ–ä¸­è°ƒç”¨
 #define REG_LUA_METHOD_TABLE(cls,lua)                   {\
                                                             luaL_newmetatable( lua , #cls );\
                                                             lua_pushvalue( lua , -1 );\
                                                             lua_setfield( lua , -2 , "__index" );\
                                                             luaL_setfuncs( lua , cls##::##__Lua_Members , 0 );\
-                                                            lua_pop( L , 1 );\
+                                                            lua_pop( lua , 1 );\
                                                         }
 
-#define LUA_SET_OBJECT(name,type,object)                {\
-                                                            *static_cast<type **>(lua_newuserdata( L , sizeof(type * ) )) = static_cast<type *>( object );\
-                                                            luaL_getmetatable(L,#type);\
-                                                            lua_setmetatable( L , -2 );\
-                                                            lua_setglobal( L , name );\
+#define LUA_SET_OBJECT(lua,name,type,object)                {\
+                                                            *static_cast<type **>(lua_newuserdata( lua , sizeof(type * ) )) = static_cast<type *>( object );\
+                                                            luaL_getmetatable(lua,#type);\
+                                                            lua_setmetatable( lua , -2 );\
+                                                            lua_setglobal( lua , name );\
                                                         }
 
 
 
-// Í¨¹ı cobject.def ¶¨Òå½Ó¿Ú
+// é€šè¿‡ cobject.def å®šä¹‰æ¥å£
 class cobject
 {
 public:
-//¶¨Òå»ùÀàĞéº¯Êı
+//å®šä¹‰åŸºç±»è™šå‡½æ•°
 #pragma push_macro("DEF_REFLECTION_FUN")
 #pragma push_macro("__ARG_INDEX__")
 #undef DEF_REFLECTION_FUN
@@ -83,7 +83,7 @@ public:
 #define DEF_REFLECTION_FUN(type,ltype,fun,...)   DEF_CPP_REFLECTION_FUN(type,ltype,fun,__VA_ARGS__)
 #include "cobject.def"
 
-// lua ½Ó¿ÚÊµÏÖ²¿·Ö Lua_xxx ×îÖÕ»áµ÷ÓÃµ½×ÓÀàµÄÊµÏÖ xxx
+// lua æ¥å£å®ç°éƒ¨åˆ† Lua_xxx æœ€ç»ˆä¼šè°ƒç”¨åˆ°å­ç±»çš„å®ç° xxx
 #undef DEF_REFLECTION_FUN
 #undef __ARG_INDEX__
 #define __ARG_INDEX__(t,i) __LUA_ARG_INDEX__(t,i)
@@ -92,11 +92,11 @@ public:
 #pragma pop_macro("__ARG_INDEX__")
 #pragma pop_macro("DEF_REFLECTION_FUN")
 
- // ¶¨ÒåluaµÄº¯Êıµ÷ÓÃ±í
+ // å®šä¹‰luaçš„å‡½æ•°è°ƒç”¨è¡¨
     DECL_LUA_METHOD_TABLE
 };
 
-//¼Ì³Ğ½Ó¿Úºó¿ÉÒÔÖ»ĞèÒª¹Ø×¢ÊµÏÖ²¿·Ö
+//ç»§æ‰¿æ¥å£åå¯ä»¥åªéœ€è¦å…³æ³¨å®ç°éƒ¨åˆ†
 class cdog :public cobject
 {
 protected:
