@@ -67,3 +67,4 @@ static int Lua_SetAttrabute(LuaState* L)
     return 0;
 }
 ```
+在开发中需要与Lua交互的类 只需要实现一个基类 复制 class cobject 中的宏,声明代码写在 .def 文件中 然后 #include<xxx.def> 就完事了，只需要在子类实现c++代码 调用 REG_LUA_METHOD_TABLE 注册一下类就完事了。
