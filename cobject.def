@@ -1,0 +1,5 @@
+DEF_REFLECTION_FUN(const char * ,LUA_TSTRING,GetName)
+DEF_REFLECTION_FUN(bool,LUA_TBOOLEAN,SetName, __ARG_INDEX__(const char * ,2) )
+DEF_REFLECTION_FUN(const char *,LUA_TSTRING,GetAttribute, __ARG_INDEX__(int ,2) )
+DEF_REFLECTION_FUN(bool,LUA_TBOOLEAN,SetAttribute, __ARG_INDEX__(const char * ,2), __ARG_INDEX__(int ,3) )
+DEF_REFLECTION_FUN(int ,LUA_TINT64,GetAge)
